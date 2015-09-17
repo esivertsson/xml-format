@@ -16,6 +16,7 @@ namespace XmlFormat
             {
                 content = reader.ReadToEnd();
             }
+
             return content;
         }
 

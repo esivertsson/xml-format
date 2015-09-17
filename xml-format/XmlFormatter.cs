@@ -9,9 +9,9 @@ namespace XmlFormat
     public static class XmlFormatter
     {
         private static int _indentation;
-        private static FormatSettings _settings;
+        private static XmlFormatJsonConfig _settings;
 
-        public static string Format(string xmlValue, FormatSettings settings)
+        public static string Format(string xmlValue, XmlFormatJsonConfig settings)
         {
             _indentation = 0;
             _settings = settings;
@@ -167,7 +167,7 @@ namespace XmlFormat
 
             for (int i = 0; i <= elementName.Length; i++)
             {
-                output.Append(" ");
+                output.Append(_settings.IndentString);
             }
 
             return output.ToString();
@@ -189,32 +189,4 @@ namespace XmlFormat
             return output.ToString();
         }
     }
-
-  public class FormatSettings
-  {
-    /// <summary>
-    /// String that will be used when indenting for child elements.
-    /// </summary>
-    public string IndentString = "  ";
-
-    /// <summary>
-    /// When there is more that one attribute on an element, all attribute but first is on new line.
-    /// <element first="attribute"
-    ///          second="attribute" />
-    /// </summary>
-    public bool NewLineWhenManyAttributes = true;
-
-    /// <summary>
-    /// Ignore <see cref="NewLineWhenManyAttributes"/> for elements in this list.
-    /// </summary>
-    public List<string> IgnoreNewLineWhenManyAttributes = new List<string> { "section", "add" };
-    
-    /// <summary>
-    /// 
-    /// </summary>
-    public List<string> KeepElementOnOneLine = new List<string> { "AttributeValue" };
-
-    // TODO: Encoding on formatted file as setting?
-    // TODO: ToLower on all strings in settings
-  }
 }

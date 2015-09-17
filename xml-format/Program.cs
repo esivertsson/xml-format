@@ -7,8 +7,12 @@ namespace XmlFormat
 {
     internal class Program
     {
+        private static XmlFormatJsonConfig _formatConfig;
+
         private static void Main(string[] args)
         {
+            ReadConfigFromFile();
+
             if (args.Length == 0)
             {
                 PresentApplication();
@@ -33,7 +37,7 @@ namespace XmlFormat
             try
             {
                 string content = IOHelper.Read(args[0]);
-                string formattedContent = XmlFormatter.Format(content, new FormatSettings());
+                string formattedContent = XmlFormatter.Format(content, _formatConfig);
                 File.Copy(args[0], args[0] + ".bak", true);
                 IOHelper.Write(args[0], formattedContent);
             }
@@ -43,12 +47,22 @@ namespace XmlFormat
             }
         }
 
+        private static void ReadConfigFromFile()
+        {
+            if (!IOHelper.IsThisAFile("xmlFormatConfig.json"))
+            {
+                throw new Exception("Config file xmlFormatConfig.json does not exist");
+            }
+
+            _formatConfig = XmlFormatJsonConfig.FromJsonFile("xmlFormatConfig.json");
+        }
+
         private static void PrintUsage()
         {
             Console.WriteLine();
-            Console.WriteLine("Usage: xmlformat [file name]");
+            Console.WriteLine("Usage: xml-format [file name]");
             Console.WriteLine("\t [file name]: Should be a path to an XML-file");
-            Console.WriteLine(@"Example: xmlformat C:\WebSite\web.config");
+            Console.WriteLine(@"Example: xml-format C:\WebSite\web.config");
         }
 
         private static void PresentApplication()
@@ -56,7 +70,7 @@ namespace XmlFormat
             Assembly assembly = Assembly.GetExecutingAssembly();
             FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(assembly.Location);
             string version = fvi.ProductVersion;
-            Console.WriteLine("XmlFormat v." + version);
+            Console.WriteLine("xml-format v." + version);
             Console.WriteLine("Formats a file containing XML-language. Copies the original to a .bak-file.");
         }
     }
