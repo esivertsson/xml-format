@@ -1,0 +1,15 @@
+{
+  "IndentString" : "  ",
+  
+  "NewLineWhenManyAttributes" : "true",
+  
+  "IgnoreNewLineWhenManyAttributes" : [
+    "section",
+    "add",
+  ],
+  
+  "KeepElementOnOneLine" : [
+    "AttributeValue"
+  ]
+  
+}
