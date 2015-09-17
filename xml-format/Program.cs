@@ -11,8 +11,6 @@ namespace XmlFormat
 
         private static void Main(string[] args)
         {
-            ReadConfigFromFile();
-
             if (args.Length == 0)
             {
                 PresentApplication();
@@ -34,8 +32,16 @@ namespace XmlFormat
                 return;
             }
 
+            if (!IOHelper.IsThisAFile("xmlFormatConfig.json"))
+            {
+                Console.WriteLine("Config file xmlFormatConfig.json does not exist");
+                PrintUsage();
+                return;
+            }
+
             try
             {
+                _formatConfig = XmlFormatJsonConfig.FromJsonFile("xmlFormatConfig.json");
                 string content = IOHelper.Read(args[0]);
                 string formattedContent = XmlFormatter.Format(content, _formatConfig);
                 File.Copy(args[0], args[0] + ".bak", true);
@@ -45,16 +51,6 @@ namespace XmlFormat
             {
                 Console.WriteLine("Failed to parse XML: " + ex.Message);
             }
-        }
-
-        private static void ReadConfigFromFile()
-        {
-            if (!IOHelper.IsThisAFile("xmlFormatConfig.json"))
-            {
-                throw new Exception("Config file xmlFormatConfig.json does not exist");
-            }
-
-            _formatConfig = XmlFormatJsonConfig.FromJsonFile("xmlFormatConfig.json");
         }
 
         private static void PrintUsage()
